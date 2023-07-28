@@ -13,12 +13,10 @@ async fn main() {
         .get_cleaned_schema();
 
     let prompt = format!("{}
-    As a senior analyst, given the above schemas and data, write a detailed and correct Postgres sql query to answer the analytical question:
-    {}
-    Comment the query with your logic.
+    As a senior analyst, given the above schemas and data, write a detailed and correct mySQL sql query to answer the analytical question:    {}
     ", schema, &question);
 
-    print!("{}", &question);
+    print!("{}", &prompt);
 
     let openai_key = std::env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY must be set");
 

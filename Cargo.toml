@@ -3,7 +3,8 @@ name = "prisma-gpt"
 version = "0.1.0"
 edition = "2021"
 
-[bin]
+[[bin]]
+name = "prisma-gpt"
 prisma-gpt = "./src/main.rs"
 
 [dependencies]

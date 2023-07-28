@@ -3,21 +3,33 @@ use serde::Deserialize;
 use serde_json::json;
 use std::fmt;
 
+const MODEL_NAME: &str = "gpt-3.5-turbo-16k";  // Define the model name here
+
 #[derive(Deserialize, Debug)]
 pub struct GPTResponse {
+    id: String,
+    object: String,
+    created: u64,
+    model: String,  // Model is a string
     choices: Vec<Choice>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Choice {
-    text: String,
+    message: Message,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Message {
+    role: String,
+    content: String,
 }
 
 impl fmt::Display for GPTResponse {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut choices_str = String::new();
         for choice in &self.choices {
-            choices_str.push_str(&format!("{}\n", choice.text));
+            choices_str.push_str(&format!("Role: {}, Content: {}\n", choice.message.role, choice.message.content));
         }
         write!(f, "{}", choices_str)
     }
@@ -45,15 +57,13 @@ impl GPTService {
         text: &str,
     ) -> Result<GPTResponse, Box<dyn std::error::Error>> {
         let client = &self.client;
-
         let openai_api_key = &self.openai_api_key;
 
-        let url = "https://api.openai.com/v1/completions";
+        let url = "https://api.openai.com/v1/chat/completions"; 
         let body = json!({
-            "prompt": text,
-            "temperature": 0.7,
+            "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": text}],
             "max_tokens": 2000,
-            "model": "text-davinci-003",
+            "model": MODEL_NAME,  // use the model name constant here
             "top_p": 1,
             "frequency_penalty": 0,
             "presence_penalty": 0,
