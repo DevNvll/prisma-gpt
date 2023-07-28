@@ -13,8 +13,7 @@ async fn main() {
         .get_cleaned_schema();
 
     let prompt = format!("{}
-    Given the above schema, write a MYSQL sql query to answer the question:
-    {}
+    As a senior analyst, given the above schemas and data, write a detailed and correct mySQL sql query to answer the analytical question:    {}
     ", schema, &question);
 
     print!("{}", &prompt);
